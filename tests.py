@@ -1,7 +1,7 @@
 from functions.get_files_info import get_files_info
 from functions.get_file_content import get_file_content
 from functions.write_file import write_file
-
+from functions.run_python_file import run_python_file
 
 def main():
     file_info_tests = [
@@ -82,6 +82,46 @@ def main():
         }
     ]
 
+    file_execute_tests = [
+        {
+            'inputs': {
+                'working_directory': 'calculator',
+                'file_path': 'main.py',
+            }
+        },
+        {
+            'inputs': {
+                'working_directory': 'calculator',
+                'file_path': 'main.py',
+                'args': ['3 + 5']
+            }
+        },
+        {
+            'inputs': {
+                'working_directory': 'calculator',
+                'file_path': 'tests.py',
+            }
+        },
+        {
+            'inputs': {
+                'working_directory': 'calculator',
+                'file_path': '../main.py',
+            }
+        },
+        {
+            'inputs': {
+                'working_directory': 'calculator',
+                'file_path': 'nonexistent.py',
+            }
+        },
+        {
+            'inputs': {
+                'working_directory': 'calculator',
+                'file_path': 'lorem.txt',
+            }
+        }
+    ]
+
     # for test in file_info_tests:
     #     print(f"Result for '{test['inputs']['directory']}' directory:")
     #     print(get_files_info(test['inputs']['working_directory'], test['inputs']['directory']))
@@ -90,12 +130,14 @@ def main():
     #     print(f"Result for '{test['inputs']['file_path']}' file:")
     #     print(get_file_content(test['inputs']['working_directory'], test['inputs']['file_path']))
 
-    for test in file_write_tests:
-        print(f"Result for '{test['inputs']['file_path']}' content:")
-        print(write_file(**test['inputs']))
+    # for test in file_write_tests:
+    #     print(f"Result for '{test['inputs']['file_path']}' content:")
+    #     print(write_file(**test['inputs']))
+
+    for test in file_execute_tests:
+        print(f"Result for '{test['inputs']['file_path']}' execute:")
+        print(run_python_file(**test['inputs']))
     
-
-
 
 if __name__ == "__main__":
     main()
