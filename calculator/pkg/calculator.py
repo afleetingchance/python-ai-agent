@@ -1,61 +1,32 @@
-# calculator.py
-
 class Calculator:
-    def __init__(self):
-        self.operators = {
-            "+": lambda a, b: a + b,
-            "-": lambda a, b: a - b,
-            "*": lambda a, b: a * b,
-            "/": lambda a, b: a / b,
-        }
-        self.precedence = {
-            "+": 1,
-            "-": 1,
-            "*": 2,
-            "/": 2,
-        }
-
     def evaluate(self, expression):
-        if not expression or expression.isspace():
-            return None
-        tokens = expression.strip().split()
-        return self._evaluate_infix(tokens)
-
-    def _evaluate_infix(self, tokens):
-        values = []
-        operators = []
-
-        for token in tokens:
-            if token in self.operators:
-                while (
-                    operators
-                    and operators[-1] in self.operators
-                    and self.precedence[operators[-1]] >= self.precedence[token]
-                ):
-                    self._apply_operator(operators, values)
-                operators.append(token)
+        parts = expression.split()
+        
+        # Perform multiplication first
+        i = 1
+        while i < len(parts) - 1:
+            if parts[i] == '*':
+                num1 = float(parts[i-1])
+                num2 = float(parts[i+1])
+                result = num1 * num2
+                parts = parts[:i-1] + [str(result)] + parts[i+2:]
+                i = 1 # Reset index after multiplication
             else:
-                try:
-                    values.append(float(token))
-                except ValueError:
-                    raise ValueError(f"invalid token: {token}")
-
-        while operators:
-            self._apply_operator(operators, values)
-
-        if len(values) != 1:
-            raise ValueError("invalid expression")
-
-        return values[0]
-
-    def _apply_operator(self, operators, values):
-        if not operators:
-            return
-
-        operator = operators.pop()
-        if len(values) < 2:
-            raise ValueError(f"not enough operands for operator {operator}")
-
-        b = values.pop()
-        a = values.pop()
-        values.append(self.operators[operator](a, b))
+                i += 2
+        
+        # Perform addition
+        i = 1
+        while i < len(parts) - 1:
+            if parts[i] == '+':
+                num1 = float(parts[i-1])
+                num2 = float(parts[i+1])
+                result = num1 + num2
+                parts = parts[:i-1] + [str(result)] + parts[i+2:]
+                i = 1 # Reset index after addition
+            else:
+                i += 2
+        
+        if len(parts) == 1:
+            return float(parts[0])
+        else:
+            return "Invalid expression"
